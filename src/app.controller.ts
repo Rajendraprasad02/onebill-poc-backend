@@ -1,3 +1,4 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   Body,
   Controller,
@@ -12,10 +13,15 @@ import { MailService } from 'common/modules/services/mail.service';
 import { Public } from 'common/decorators/public.decorator';
 import { SendMailRequest } from 'app-common/send-mail-request.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'modules/auth/auth.service';
+import { UserService } from 'modules/users/user/user.service';
 
 @Controller()
 export class AppController {
   constructor(
+    private readonly authService: AuthService, // ✅ Corrected
+    private readonly userService: UserService, // ✅ Corrected
+
     private readonly appService: AppService,
     private readonly mailService: MailService,
   ) {}
@@ -48,17 +54,65 @@ export class AppController {
   async googleAuth() {
     // Redirects to Google login page
   }
+
   @Public()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
-    const token = req.user.accessToken;
-    return res.redirect(`http://localhost:5173/invoice-emails?token=${token}`);
+    const email = req.user.profile?.emails?.[0]?.value; // Extract email from Google login
+    const token = req.user.accessToken; // Extract Google token (not JWT)
+    console.log('email', email);
+
+    const existingUser = await this.userService.findByEmail(email); // Check user in DB
+    // const existingUser = false; // Check user in DB
+
+    if (existingUser) {
+      // User already exists → Redirect to invoice page
+      return res.redirect(
+        `http://localhost:5173/invoice-emails?token=${token}`,
+      );
+    } else {
+      // User does not exist → Redirect to set password page
+      return res.redirect(
+        `http://localhost:5173/set-password?email=${email}&token=${token}`,
+      );
+    }
   }
+
   @Public()
   @Get('emails')
   async getEmails(@Req() req) {
     const token = req.query.token;
-    return this.appService.getInvoiceEmails(token);
+    return this.appService.getDashboardData(token);
+  }
+
+  @Public()
+  @Post('google/set-password')
+  async setGooglePassword(@Body() body, @Req() req, @Res() res) {
+    try {
+      const { email, password } = body;
+      const token = req.headers.authorization?.split(' ')[1]; // Extract token from "Bearer <token>"
+
+      if (!token) {
+        return res
+          .status(401)
+          .json({ message: 'Unauthorized: No token provided' });
+      }
+
+      // Step 1: Create the user
+      const newUser = await this.authService.createUser({
+        email,
+        username: email,
+        password,
+      });
+
+      // Step 2: Redirect to invoice page
+      return res.redirect(
+        `http://localhost:5173/invoice-emails?token=${token}`,
+      );
+    } catch (error) {
+      console.error('Error setting password:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
   }
 }
