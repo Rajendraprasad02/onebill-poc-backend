@@ -55,30 +55,6 @@ export class AppController {
     // Redirects to Google login page
   }
 
-  // @Public()
-  // @Get('google/callback')
-  // @UseGuards(AuthGuard('google'))
-  // async googleAuthRedirect(@Req() req, @Res() res) {
-  //   const email = req.user.profile?.emails?.[0]?.value; // Extract email from Google login
-  //   const token = req.user.accessToken; // Extract Google token (not JWT)
-  //   console.log('email', email);
-
-  //   const existingUser = await this.userService.findByEmail(email); // Check user in DB
-  //   // const existingUser = false; // Check user in DB
-
-  //   if (existingUser) {
-  //     // User already exists → Redirect to invoice page
-  //     return res.redirect(
-  //       `http://localhost:5173/invoice-emails?token=${token}`,
-  //     );
-  //   } else {
-  //     // User does not exist → Redirect to set password page
-  //     return res.redirect(
-  //       `http://localhost:5173/set-password?email=${email}&token=${token}`,
-  //     );
-  //   }
-  // }
-
   @Public()
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -87,8 +63,20 @@ export class AppController {
     const token = req.user.accessToken; // Extract Google token (not JWT)
     console.log('email', email);
 
-    // Redirect **always** to invoice page, skipping user existence check
-    return res.redirect(`http://localhost:5173/invoice-emails?token=${token}`);
+    const existingUser = await this.userService.findByEmail(email); // Check user in DB
+    // const existingUser = false; // Check user in DB
+
+    if (existingUser) {
+      // User already exists → Redirect to invoice page
+      return res.redirect(
+        `http://localhost:5173/invoice-emails?token=${token}`,
+      );
+    } else {
+      // User does not exist → Redirect to set password page
+      return res.redirect(
+        `http://localhost:5173/set-password?email=${email}&token=${token}`,
+      );
+    }
   }
 
   @Public()
