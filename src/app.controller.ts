@@ -61,22 +61,21 @@ export class AppController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     const email = req.user.profile?.emails?.[0]?.value; // Extract email from Google login
     const token = req.user.accessToken; // Extract Google token (not JWT)
-    console.log('email', email);
 
-    const existingUser = await this.userService.findByEmail(email); // Check user in DB
+    // const existingUser = await this.userService.findByEmail(email); // Check user in DB
     // const existingUser = false; // Check user in DB
 
-    if (existingUser) {
-      // User already exists → Redirect to invoice page
-      return res.redirect(
-        `https://onebill-poc.vercel.app/invoice-emails?token=${token}`,
-      );
-    } else {
-      // User does not exist → Redirect to set password page
-      return res.redirect(
-        `https://onebill-poc.vercel.app/set-password?email=${email}&token=${token}`,
-      );
-    }
+    // if (existingUser) {
+    // User already exists → Redirect to invoice page
+    return res.redirect(
+      `https://onebill-poc.vercel.app/invoice-emails?token=${token}`,
+    );
+    // } else {
+    //   // User does not exist → Redirect to set password page
+    //   return res.redirect(
+    //     `https://onebill-poc.vercel.app/set-password?email=${email}&token=${token}`,
+    //   );
+    // }
   }
 
   @Public()
