@@ -1,0 +1,45 @@
+{
+  "development": {
+    "type": "",
+    "host": "",
+    "port": 5432,
+    "username": "",
+    "password": "d",
+    "database": "",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true,
+    "logging": true
+  },
+  "production": {
+    "type": "",
+    "host": "",
+    "port": 5432,
+    "username": "",
+    "password": "",
+    "database": "",
+    "entities": ["dist/**//*.entity{.ts,.js}"],
+    "synchronize": false,
+    "logging": false
+  },
+  "local": {
+    "type": "postgres",
+    "host": "onebill-stxnightfury-e9b8.d.aivencloud.com",
+    "port": 12310,
+    "username": "avnadmin",
+    "password": "AVNS_vKTduvlgiItdHNkZ3Z3",
+    "database": "onebill",
+    "entities": ["dist/**/*.entity.js"],
+    "synchronize": true,
+    "logging": true,
+    "ssl": {
+      "rejectUnauthorized": false
+    }
+  },
+  "mail": {
+    "MAIL_HOST": "mail.talentakeaways.com",
+    "MAIL_PORT": "26",
+    "MAIL_USER": "itservices@talentakeaways.com",
+    "MAIL_PASS": "J7Er28sL%)5!9",
+    "MAIL_FROM": "infrats<no-reply@yourapp.com>"
+  }
+}
