@@ -7,7 +7,6 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SanitizePipe } from './common/pipes/sanitize.pipe';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

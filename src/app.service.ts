@@ -1,6 +1,6 @@
 import { promises } from 'dns';
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+
 import { SendMailRequest } from 'app-common/send-mail-request.dto';
 import { SendMailEvent } from 'app-common/send-mail.events';
 import axios from 'axios';
@@ -9,16 +9,14 @@ const path = require('path').promises;
 
 @Injectable()
 export class AppService {
-  constructor(
-    @Inject('MAIL_SERVICE') private readonly mailClient: ClientKafka,
-  ) {}
+  constructor() {}
   getHello(): string {
     return 'Hello World!';
   }
 
-  sendMail({ email, content }: SendMailRequest) {
-    this.mailClient.emit('send_mail', new SendMailEvent(email, content));
-  }
+  // sendMail({ email, content }: SendMailRequest) {
+  //   this.mailClient.emit('send_mail', new SendMailEvent(email, content));
+  // }
 
   async downloadAttachment(
     accessToken,

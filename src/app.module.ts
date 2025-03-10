@@ -21,7 +21,7 @@ import { LoggingModule } from 'common/logging/logging.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksModule } from 'common/tasks/tasks.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from 'google.statergy';
 import { GmailModule } from './modules/gmail/gmail.module';
@@ -33,21 +33,21 @@ const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NO
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'google' }),
-    ClientsModule.register([
-      {
-        name: 'MAIL_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'mail',
-            brokers: ['localhost:9092'],
-          },
-          consumer: {
-            groupId: 'mail-service',
-          },
-        },
-      },
-    ]),
+    // ClientsModule.register([
+    //   {
+    //     name: 'MAIL_SERVICE',
+    //     // transport: Transport.KAFKA,
+    //     options: {
+    //       client: {
+    //         clientId: 'mail',
+    //         brokers: ['localhost:9092'],
+    //       },
+    //       consumer: {
+    //         groupId: 'mail-service',
+    //       },
+    //     },
+    //   },
+    // ]),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
