@@ -5,7 +5,7 @@ import * as ejs from 'ejs';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-const configuration = getDataFromJsonFile('src/config/config.json');
+// const configuration = getDataFromJsonFile('src/config/config.json');
 export class MailService {
   private transporter;
   private mailcongigration;
