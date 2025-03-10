@@ -13,7 +13,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
 
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: 'http://localhost:3000/api/google/callback',
+      callbackURL:
+        'https://onebill-poc-backend-production.up.railway.app/api/google/callback',
       scope: [
         'email',
         'profile',

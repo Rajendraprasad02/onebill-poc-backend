@@ -69,12 +69,12 @@ export class AppController {
     if (existingUser) {
       // User already exists → Redirect to invoice page
       return res.redirect(
-        `http://localhost:5173/invoice-emails?token=${token}`,
+        `https://onebill-poc.vercel.app/invoice-emails?token=${token}`,
       );
     } else {
       // User does not exist → Redirect to set password page
       return res.redirect(
-        `http://localhost:5173/set-password?email=${email}&token=${token}`,
+        `https://onebill-poc.vercel.app/set-password?email=${email}&token=${token}`,
       );
     }
   }
@@ -109,7 +109,7 @@ export class AppController {
       // Step 2: Redirect to invoice page
       return res.status(201).json({
         message: 'User created successfully',
-        redirectUrl: `http://localhost:5173/invoice-emails?token=${token}`,
+        redirectUrl: `https://onebill-poc.vercel.app/invoice-emails?token=${token}`,
       });
     } catch (error) {
       console.error('Error setting password:', error);
