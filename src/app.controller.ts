@@ -30,24 +30,24 @@ export class AppController {
   getHello(): string {
     return 'Hello World!';
   }
-  @Public()
-  @Post('mailcheck')
-  async asmailCheck(@Body() SendMailRequest): Promise<any> {
-    console.log('SendMailRequest', SendMailRequest);
-    this.appService.sendMail(SendMailRequest);
+  // @Public()
+  // @Post('mailcheck')
+  // async asmailCheck(@Body() SendMailRequest): Promise<any> {
+  //   console.log('SendMailRequest', SendMailRequest);
+  //   this.appService.sendMail(SendMailRequest);
 
-    // return await this.mailService.sendMail(
-    //   'virumab6@gmail.com',
-    //   'subject new',
-    //   null,
-    //   true,
-    //   'welcome',
-    //   {
-    //     name: 'Viruma',
-    //     platform: 'React',
-    //   },
-    // );
-  }
+  // return await this.mailService.sendMail(
+  //   'virumab6@gmail.com',
+  //   'subject new',
+  //   null,
+  //   true,
+  //   'welcome',
+  //   {
+  //     name: 'Viruma',
+  //     platform: 'React',
+  //   },
+  // );
+  // }
   @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
