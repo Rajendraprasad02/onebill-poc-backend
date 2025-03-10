@@ -107,9 +107,10 @@ export class AppController {
       });
 
       // Step 2: Redirect to invoice page
-      return res.redirect(
-        `http://localhost:5173/invoice-emails?token=${token}`,
-      );
+      return res.status(201).json({
+        message: 'User created successfully',
+        redirectUrl: `http://localhost:5173/invoice-emails?token=${token}`,
+      });
     } catch (error) {
       console.error('Error setting password:', error);
       return res.status(500).json({ message: 'Internal Server Error' });
