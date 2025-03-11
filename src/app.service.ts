@@ -283,6 +283,8 @@ export class AppService {
   // }
 
   async getYahooInvoiceEmails(accessToken: string) {
+    console.log('accessToken', accessToken);
+
     try {
       // Corrected Yahoo Mail API endpoint
       const { data } = await axios.get(
