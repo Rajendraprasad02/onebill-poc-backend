@@ -293,10 +293,10 @@ export class AppService {
         'https://mail.yahooapis.com/v1.0/me/messages',
         {
           headers: { Authorization: `Bearer ${accessToken}` },
-          params: {
-            q: 'invoice', // Search for emails with "invoice" in the subject
-            maxResults: 10,
-          },
+          // params: {
+          //   q: 'invoice', // Search for emails with "invoice" in the subject
+          //   maxResults: 10,
+          // },
         },
       );
       console.log('out after yahoo access token');
