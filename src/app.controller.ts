@@ -127,7 +127,7 @@ export class AppController {
   @Get('yahoo/callback')
   @UseGuards(AuthGuard('yahoo'))
   async yahooAuthRedirect(@Req() req, @Res() res) {
-    console.log('called');
+    console.log('req response', req);
 
     const email = req.user.profile?.emails?.[0]?.value;
     console.log('called email', email);
