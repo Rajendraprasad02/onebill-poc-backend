@@ -131,7 +131,7 @@ export class AppController {
     const token = req.user.accessToken;
 
     return res.redirect(
-      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=yahoo`,
+      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
     );
   }
 
