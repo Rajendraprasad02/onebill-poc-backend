@@ -225,158 +225,45 @@ export class AppService {
   }
 
   // async getYahooInvoiceEmails(accessToken: string) {
-  //     try {
-  //         // IMAP Configuration for Yahoo
-  //         const config = {
-  //             imap: {
-  //                 user: 'your-email@yahoo.com', // Replace with actual Yahoo email
-  //                 xoauth2: accessToken, // Use OAuth2 access token
-  //                 host: 'imap.mail.yahoo.com',
-  //                 port: 993,
-  //                 tls: true,
-  //                 authTimeout: 10000,
-  //             },
-  //         };
-
-  //         // Connect to Yahoo Mail IMAP
-  //         const connection = await Imap.connect(config);
-  //         await connection.openBox('INBOX');
-
-  //         // Search emails with "invoice" in subject
-  //         const searchCriteria = ['ALL', ['SUBJECT', 'invoice']];
-  //         const fetchOptions = { bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)', 'TEXT'], struct: true };
-
-  //         const messages = await connection.search(searchCriteria, fetchOptions);
-
-  //         if (!messages.length) {
-  //             return { message: 'No invoices found.' };
-  //         }
-
-  //         // Extract emails
-  //         const emails = await Promise.all(
-  //             messages.map(async (message) => {
-  //                 const header = message.parts.find((part) => part.which === 'HEADER.FIELDS (FROM TO SUBJECT DATE)');
-  //                 const bodyPart = message.parts.find((part) => part.which === 'TEXT');
-
-  //                 const parsed = await simpleParser(bodyPart.body);
-
-  //                 return {
-  //                     subject: parsed.subject || '(No Subject)',
-  //                     from: parsed.from?.text || 'Unknown Sender',
-  //                     messageBody: parsed.text || parsed.html || '',
-  //                     attachments: parsed.attachments.map((att) => ({
-  //                         filename: att.filename,
-  //                         mimeType: att.contentType,
-  //                         content: att.content.toString('base64'),
-  //                     })),
-  //                 };
-  //             })
-  //         );
-
-  //         connection.end(); // Close the connection
-
-  //         return emails;
-  //     } catch (error) {
-  //         console.error('Error fetching Yahoo emails:', error);
-  //         return { error: 'Failed to fetch emails' };
-  //     }
-  // }
-
-  async getYahooInvoiceEmails(accessToken: string) {
-    console.log('accessToken', accessToken);
-
-    try {
-      console.log('in yahoo access token');
-
-      // Corrected Yahoo Mail API endpoint
-      const { data } = await axios.get(
-        'https://mail.yahooapis.com/v1.0/me/messages',
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          // params: {
-          //   q: 'invoice', // Search for emails with "invoice" in the subject
-          //   maxResults: 10,
-          // },
-        },
-      );
-      console.log('out after yahoo access token');
-      console.log('out after yahoo access token with data', data);
-
-      if (!data.messages || data.messages.length === 0) {
-        return { message: 'No invoices found.' };
-      }
-
-      // Step 2: Extract email details
-      const emails = await Promise.all(
-        data.messages.map(async (msg) => {
-          const response = await axios.get(
-            `https://mail.yahooapis.com/v1.0/me/messages/${msg.id}`,
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            },
-          );
-
-          const emailData = response.data;
-          const headers = emailData.payload.headers;
-
-          const subject =
-            headers.find((header) => header.name === 'Subject')?.value ||
-            '(No Subject)';
-
-          const from =
-            headers.find((header) => header.name === 'From')?.value ||
-            'Unknown Sender';
-
-          let messageBody = emailData.payload.body?.data || 'No content';
-          if (messageBody) {
-            messageBody = Buffer.from(messageBody, 'base64').toString('utf-8');
-          }
-
-          return { subject, from, messageBody };
-        }),
-      );
-
-      return emails;
-    } catch (error) {
-      console.error('Error fetching Yahoo emails:', error);
-      return { error: 'Failed to fetch emails from Yahoo' };
-    }
-  }
-
-  // async getYahooInvoiceEmails(accessToken: string) {
   //   try {
-  //     // Step 1: Fetch emails with "invoice" in subject
+  //     // Corrected Yahoo Mail API endpoint
   //     const { data } = await axios.get(
-  //       'https://api.mail.yahoo.com/ws/mail/v1.1/json/inbox/messages?q=invoice',
+  //       'https://mail.yahooapis.com/v1.0/me/messages',
   //       {
   //         headers: { Authorization: `Bearer ${accessToken}` },
+  //         // params: {
+  //         //   q: 'invoice', // Search for emails with "invoice" in the subject
+  //         //   maxResults: 10,
+  //         // },
   //       },
   //     );
 
-  //     if (!data.messages) return { message: 'No invoices found.' };
+  //     if (!data.messages || data.messages.length === 0) {
+  //       return { message: 'No invoices found.' };
+  //     }
 
   //     // Step 2: Extract email details
   //     const emails = await Promise.all(
   //       data.messages.map(async (msg) => {
   //         const response = await axios.get(
-  //           `https://api.mail.yahoo.com/ws/mail/v1.1/json/message/${msg.id}`,
+  //           `https://mail.yahooapis.com/v1.0/me/messages/${msg.id}`,
   //           {
   //             headers: { Authorization: `Bearer ${accessToken}` },
   //           },
   //         );
 
   //         const emailData = response.data;
-  //         const payload = emailData.payload;
+  //         const headers = emailData.payload.headers;
 
   //         const subject =
-  //           payload.headers.find((header) => header.name === 'Subject')
-  //             ?.value || '(No Subject)';
+  //           headers.find((header) => header.name === 'Subject')?.value ||
+  //           '(No Subject)';
 
   //         const from =
-  //           payload.headers.find((header) => header.name === 'From')?.value ||
+  //           headers.find((header) => header.name === 'From')?.value ||
   //           'Unknown Sender';
 
-  //         let messageBody = payload.body?.data || '';
+  //         let messageBody = emailData.payload.body?.data || 'No content';
   //         if (messageBody) {
   //           messageBody = Buffer.from(messageBody, 'base64').toString('utf-8');
   //         }
@@ -391,4 +278,51 @@ export class AppService {
   //     return { error: 'Failed to fetch emails from Yahoo' };
   //   }
   // }
+  async getYahooInvoiceEmails(accessToken: string) {
+    const imapConfig = {
+      imap: {
+        user: '14stxnightfury@gmail.com', // Replace with authenticated user's email
+        xoauth2: accessToken, // Use OAuth2 token for authentication
+        host: 'imap.mail.yahoo.com',
+        port: 993,
+        tls: true,
+        authTimeout: 3000,
+      },
+    };
+
+    try {
+      const connection = await Imap.connect(imapConfig);
+      await connection.openBox('INBOX');
+
+      const searchCriteria = ['ALL'];
+      const fetchOptions = {
+        bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
+        struct: true,
+      };
+      const messages = await connection.search(searchCriteria, fetchOptions);
+
+      const emails = await Promise.all(
+        messages.map(async (msg) => {
+          const headers = msg.parts[0].body;
+          const subject = headers.subject?.[0] || '(No Subject)';
+          const from = headers.from?.[0] || 'Unknown Sender';
+
+          // Fetch full email body
+          const fullMessage = await connection.fetch(msg.attributes.uid, {
+            bodies: '',
+          });
+          const parsedEmail = await simpleParser(fullMessage[0].parts[0].body);
+          const messageBody = parsedEmail.text || 'No content';
+
+          return { subject, from, messageBody };
+        }),
+      );
+
+      await connection.end();
+      return emails;
+    } catch (error) {
+      console.error('IMAP Fetch Error:', error);
+      return { error: 'Failed to fetch emails from Yahoo' };
+    }
+  }
 }

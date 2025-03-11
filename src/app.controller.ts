@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -128,24 +129,23 @@ export class AppController {
   @UseGuards(AuthGuard('yahoo'))
   async yahooAuthRedirect(@Req() req, @Res() res) {
     const email = req.user.profile?.emails?.[0]?.value;
-    console.log('reqreq', req);
 
-    console.log('called email', email);
     const token = req.user.accessToken;
-    console.log(token, 'called token');
 
     return res.redirect(
       `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
     );
   }
 
-  @Public()
-  @Get('yahoo/emails')
-  async getYahooEmails(@Req() req) {
-    console.log('came in');
+  // @Public()
+  // @Get('yahoo/emails')
+  // async getYahooEmails(@Req() req) {
+  //   const token = req.query.token;
+  //   return this.appService.getYahooInvoiceEmails(token);
+  // }
 
-    const token = req.query.token;
-    console.log('came in token', token);
+  @Get('yahooemails')
+  async getYahooEmails(@Query('token') token: string) {
     return this.appService.getYahooInvoiceEmails(token);
   }
 }
