@@ -27,6 +27,9 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
       return done(new UnauthorizedException(), false);
     }
 
+    console.log('accessTokenaccessToken', accessToken);
+    console.log('profileprofile', profile);
+
     return done(null, {
       accessToken,
       profile,
