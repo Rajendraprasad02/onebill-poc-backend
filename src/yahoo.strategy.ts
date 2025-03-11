@@ -6,12 +6,6 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
   constructor(private readonly configService: ConfigService) {
-    console.log(
-      'Yahoo Client ID:',
-      configService.get<string>('YAHOO_CLIENT_ID'),
-    );
-    console.log('Yahoo Client ID:', configService.get<string>('YAHOO_APP_ID'));
-
     super({
       authorizationURL: 'https://api.login.yahoo.com/oauth2/request_auth',
       tokenURL: 'https://api.login.yahoo.com/oauth2/get_token',
@@ -19,7 +13,7 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
       clientSecret: configService.get<string>('YAHOO_APP_ID'),
       callbackURL:
         'https://onebill-poc-backend-production.up.railway.app/api/yahoo/callback', // Replace with your callback URL
-      scope: ['openid', 'email', 'profile'],
+      scope: ['openid', 'email', 'profile', 'mail-r'],
     });
   }
 
@@ -30,12 +24,13 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
     done: Function,
   ) {
     if (!accessToken) {
+      console.error('Yahoo OAuth Error: No access token received');
       return done(new UnauthorizedException(), false);
     }
 
-    return done(null, {
-      accessToken,
-      profile,
-    });
+    console.log('✅ Access Token:', accessToken);
+    console.log('✅ Profile:', profile);
+
+    return done(null, { accessToken, profile });
   }
 }
