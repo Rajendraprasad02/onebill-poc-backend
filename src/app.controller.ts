@@ -128,6 +128,8 @@ export class AppController {
   @UseGuards(AuthGuard('yahoo'))
   async yahooAuthRedirect(@Req() req, @Res() res) {
     const email = req.user.profile?.emails?.[0]?.value;
+    console.log('reqreq', req);
+
     console.log('called email', email);
     const token = req.user.accessToken;
     console.log(token, 'called token');

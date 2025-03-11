@@ -13,7 +13,7 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
       clientSecret: configService.get<string>('YAHOO_APP_ID'),
       callbackURL:
         'https://onebill-poc-backend-production.up.railway.app/api/yahoo/callback', // Replace with your callback URL
-      scope: ['openid', 'email', 'profile'],
+      scope: ['openid', 'email', 'profile', 'mail.r'],
     });
   }
 
