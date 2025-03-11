@@ -115,4 +115,16 @@ export class AppController {
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+
+  @Get('yahoo')
+  @UseGuards(AuthGuard('yahoo'))
+  async yahooLogin() {
+    // This redirects the user to Yahoo login
+  }
+
+  @Get('yahoo/callback')
+  @UseGuards(AuthGuard('yahoo'))
+  yahooAuthCallback(@Req() req) {
+    return req.user; // Returns access token and user profile
+  }
 }

@@ -1,20 +1,25 @@
-import { Strategy } from 'passport-google-oauth20';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-oauth2';
 import { ConfigService } from '@nestjs/config';
-import * as dotenv from 'dotenv';
-
-dotenv.config(); // Load environment variables
 
 @Injectable()
 export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
   constructor(private readonly configService: ConfigService) {
+    console.log(
+      'Yahoo Client ID:',
+      configService.get<string>('YAHOO_CLIENT_ID'),
+    );
+    console.log('Yahoo Client ID:', configService.get<string>('YAHOO_APP_ID'));
+
     super({
-      clientID: configService.get<string>(process.env.YOHOO_CLIENT_ID),
-      clientSecret: configService.get<string>(process.env.YAHOO_APP_ID),
+      authorizationURL: 'https://api.login.yahoo.com/oauth2/request_auth',
+      tokenURL: 'https://api.login.yahoo.com/oauth2/get_token',
+      clientID: configService.get<string>('YAHOO_CLIENT_ID'),
+      clientSecret: configService.get<string>('YAHOO_APP_ID'),
       callbackURL:
-        'https://f7a0-2409-4091-a0a3-d200-f464-64e0-4b9b-8cf0.ngrok-free.app',
-      scope: ['mail-r'], // Add other scopes as needed
+        'https://onebill-poc-backend-production.up.railway.app/api/yahoo/callback', // Replace with your callback URL
+      scope: ['openid', 'email', 'profile'],
     });
   }
 
@@ -24,9 +29,6 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
     profile: any,
     done: Function,
   ) {
-    console.log('Access Token:', accessToken); // Check if the token is retrieved
-    console.log('Profile:', profile);
-
     if (!accessToken) {
       return done(new UnauthorizedException(), false);
     }
