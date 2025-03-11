@@ -59,8 +59,8 @@ export class AppController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res) {
-    const email = req.user.profile?.emails?.[0]?.value; // Extract email from Google login
-    const token = req.user.accessToken; // Extract Google token (not JWT)
+    const email = req.user.profile?.emails?.[0]?.value;
+    const token = req.user.accessToken;
 
     // const existingUser = await this.userService.findByEmail(email); // Check user in DB
     // const existingUser = false; // Check user in DB
@@ -116,15 +116,29 @@ export class AppController {
     }
   }
 
+  @Public()
   @Get('yahoo')
   @UseGuards(AuthGuard('yahoo'))
-  async yahooLogin() {
-    // This redirects the user to Yahoo login
+  async yahooAuth() {
+    // Redirects to Yahoo login page
   }
 
+  @Public()
   @Get('yahoo/callback')
   @UseGuards(AuthGuard('yahoo'))
-  yahooAuthCallback(@Req() req) {
-    return req.user; // Returns access token and user profile
+  async yahooAuthRedirect(@Req() req, @Res() res) {
+    const email = req.user.profile?.emails?.[0]?.value;
+    const token = req.user.accessToken;
+
+    return res.redirect(
+      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=yahoo`,
+    );
+  }
+
+  @Public()
+  @Get('yahoo/emails')
+  async getYahooEmails(@Req() req) {
+    const token = req.query.token;
+    return this.appService.getYahooInvoiceEmails(token);
   }
 }
