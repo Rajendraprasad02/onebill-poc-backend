@@ -286,6 +286,8 @@ export class AppService {
     console.log('accessToken', accessToken);
 
     try {
+      console.log('in yahoo access token');
+
       // Corrected Yahoo Mail API endpoint
       const { data } = await axios.get(
         'https://mail.yahooapis.com/v1.0/me/messages',
@@ -297,6 +299,8 @@ export class AppService {
           },
         },
       );
+      console.log('out after yahoo access token');
+      console.log('out after yahoo access token with data', data);
 
       if (!data.messages || data.messages.length === 0) {
         return { message: 'No invoices found.' };
