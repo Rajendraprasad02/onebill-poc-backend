@@ -26,6 +26,7 @@ import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from 'google.statergy';
 import { GmailModule } from './modules/gmail/gmail.module';
 import { YahooStrategy } from 'yahoo.strategy';
+import { MicrosoftStrategy } from 'microsoft.strategy';
 
 const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NODE_ENV is not set
 // const configPath = path.resolve(__dirname, '../src/config/config.json'); // Path to your config file
@@ -35,6 +36,7 @@ const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NO
   imports: [
     PassportModule.register({ defaultStrategy: 'google' }),
     PassportModule.register({ defaultStrategy: 'yahoo' }),
+    PassportModule.register({ defaultStrategy: 'outlook' }),
 
     // ClientsModule.register([
     //   {
@@ -81,6 +83,7 @@ const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NO
     AppService,
     GoogleStrategy,
     YahooStrategy,
+    MicrosoftStrategy,
   ],
 })
 export class AppModule {
