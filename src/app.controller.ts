@@ -16,6 +16,7 @@ import { SendMailRequest } from 'app-common/send-mail-request.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'modules/auth/auth.service';
 import { UserService } from 'modules/users/user/user.service';
+import axios from 'axios';
 
 @Controller()
 export class AppController {
@@ -150,5 +151,23 @@ export class AppController {
     const { userEmail, accessToken } = body;
 
     return this.appService.fetchYahooInbox(userEmail, accessToken);
+  }
+
+  @Get('microsoft')
+  @UseGuards(AuthGuard('microsoft'))
+  async microsoftAuth() {}
+
+  @Get('microsoft/callback')
+  @UseGuards(AuthGuard('microsoft'))
+  async microsoftAuthRedirect(@Req() req) {
+    const accessToken = req.user.accessToken;
+    const mails = await axios.get(
+      'https://graph.microsoft.com/v1.0/me/messages',
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      },
+    );
+
+    return mails.data.value; // Return Outlook emails
   }
 }
