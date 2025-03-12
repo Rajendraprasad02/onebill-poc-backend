@@ -157,9 +157,12 @@ export class AppController {
   @UseGuards(AuthGuard('microsoft'))
   async microsoftAuth() {}
 
-  @Get('microsoft/callback')
+  @Get('outlook/callback')
   @UseGuards(AuthGuard('microsoft'))
   async microsoftAuthRedirect(@Req() req) {
+    console.log('in the microsdo');
+    console.log('in the microsdo', req);
+
     const accessToken = req.user.accessToken;
     const mails = await axios.get(
       'https://graph.microsoft.com/v1.0/me/messages',

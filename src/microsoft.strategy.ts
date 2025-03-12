@@ -17,6 +17,9 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'microsoft') {
   }
 
   async validate(accessToken, refreshToken, profile) {
+    console.log('accessToken', accessToken);
+    console.log('profile', profile);
+
     return { accessToken, profile };
   }
 }
