@@ -8,6 +8,9 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
   constructor(private configService: ConfigService) {
     console.log('in the outlook');
     super({
+      authorizationURL:
+        'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+      tokenURL: 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
       clientID: configService.get('MICROSOFT_CLIENT_ID'),
       clientSecret: configService.get('MICROSOFT_CLIENT_SECRET'),
       callbackURL:
