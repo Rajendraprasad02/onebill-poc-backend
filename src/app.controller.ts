@@ -153,10 +153,12 @@ export class AppController {
     return this.appService.fetchYahooInbox(userEmail, accessToken);
   }
 
+  @Public()
   @Get('microsoft')
   @UseGuards(AuthGuard('microsoft'))
   async microsoftAuth() {}
 
+  @Public()
   @Get('outlook/callback')
   @UseGuards(AuthGuard('microsoft'))
   async microsoftAuthRedirect(@Req() req) {
