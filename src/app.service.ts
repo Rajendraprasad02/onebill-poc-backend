@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { SendMailRequest } from 'app-common/send-mail-request.dto';
 import { SendMailEvent } from 'app-common/send-mail.events';
-const Imap = require('imap');
+const Imap = require('imap-simple');
 import { simpleParser } from 'mailparser';
 import axios from 'axios';
 
