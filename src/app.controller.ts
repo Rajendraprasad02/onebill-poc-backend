@@ -143,4 +143,12 @@ export class AppController {
     const token = req.query.token;
     return this.appService.getYahooInvoiceEmails(token);
   }
+
+  @Public()
+  @Post('ak')
+  async getMail(@Body() body) {
+    const { userEmail, accessToken } = body;
+
+    return this.appService.fetchYahooInbox(userEmail, accessToken);
+  }
 }

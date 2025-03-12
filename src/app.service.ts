@@ -3,9 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { SendMailRequest } from 'app-common/send-mail-request.dto';
 import { SendMailEvent } from 'app-common/send-mail.events';
-import Imap from 'imap-simple';
+const Imap = require('imap');
 import { simpleParser } from 'mailparser';
 import axios from 'axios';
+
 const fs = require('fs').promises;
 const path = require('path').promises;
 
@@ -276,6 +277,42 @@ export class AppService {
     } catch (error) {
       console.error('Error fetching Yahoo emails:', error);
       return { error: 'Failed to fetch emails from Yahoo' };
+    }
+  }
+
+  async fetchYahooInbox(userEmail, accessToken) {
+    const config = {
+      imap: {
+        user: userEmail, // User's Yahoo email
+        xoauth2: accessToken, // OAuth token instead of password
+        host: 'imap.mail.yahoo.com',
+        port: 993,
+        tls: true,
+        authTimeout: 30000,
+      },
+    };
+
+    try {
+      const connection = await Imap.connect(config);
+      await connection.openBox('INBOX');
+
+      const searchCriteria = ['UNSEEN']; // Fetch unread emails
+      const fetchOptions = { bodies: ['HEADER', 'TEXT'], struct: true };
+
+      const messages = await connection.search(searchCriteria, fetchOptions);
+      console.log(`Unread Emails for ${userEmail}:`, messages.length);
+
+      messages.forEach((message) => {
+        const header = message.parts.find(
+          (part) => part.which === 'HEADER',
+        ).body;
+        console.log('From:', header.from[0]);
+        console.log('Subject:', header.subject[0]);
+      });
+
+      connection.end();
+    } catch (error) {
+      console.error(`IMAP Error for ${userEmail}:`, error);
     }
   }
 }
