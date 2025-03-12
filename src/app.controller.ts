@@ -154,13 +154,13 @@ export class AppController {
   }
 
   @Public()
-  @Get('outlook')
-  @UseGuards(AuthGuard('outlook'))
+  @Get('microsoft')
+  @UseGuards(AuthGuard('microsoft'))
   async microsoftAuth() {}
 
   @Public()
   @Get('outlook/callback')
-  @UseGuards(AuthGuard('outlook'))
+  @UseGuards(AuthGuard('microsoft'))
   async microsoftAuthRedirect(@Req() req) {
     console.log('in the microsdo');
     console.log('in the microsdo', req);
