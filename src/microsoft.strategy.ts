@@ -4,7 +4,7 @@ import { Strategy } from 'passport-microsoft';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class MicrosoftStrategy extends PassportStrategy(Strategy, 'microsoft') {
+export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
   constructor(private configService: ConfigService) {
     super({
       clientID: configService.get('MICROSOFT_CLIENT_ID'),
