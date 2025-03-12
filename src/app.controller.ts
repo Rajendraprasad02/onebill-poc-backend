@@ -162,8 +162,7 @@ export class AppController {
   @Get('outlook/callback')
   @UseGuards(AuthGuard('outlook'))
   async microsoftAuthRedirect(@Req() req) {
-    console.log('in the microsdo');
-    console.log('in the microsdo', req);
+    console.log('ress', req);
 
     const accessToken = req.user.accessToken;
     const mails = await axios.get(
@@ -172,6 +171,7 @@ export class AppController {
         headers: { Authorization: `Bearer ${accessToken}` },
       },
     );
+    console.log('mails', mails);
 
     return mails.data.value; // Return Outlook emails
   }

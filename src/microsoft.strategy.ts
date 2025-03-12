@@ -18,6 +18,7 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       scope: ['openid', 'profile', 'email', 'Mail.Read'],
       tenant: 'common',
     });
+    console.log('out the outlook');
   }
 
   async validate(accessToken, refreshToken, profile) {
