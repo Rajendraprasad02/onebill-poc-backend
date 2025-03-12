@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-oauth2';
 import { ConfigService } from '@nestjs/config';
-import axios from 'axios';
 
 @Injectable()
 export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
@@ -18,31 +17,22 @@ export class YahooStrategy extends PassportStrategy(Strategy, 'yahoo') {
     });
   }
 
-  // async validate(
-  //   accessToken: string,
-  //   refreshToken: string,
-  //   profile: any,
-  //   done: Function,
-  // ) {
-  //   if (!accessToken) {
-  //     return done(new UnauthorizedException(), false);
-  //   }
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: Function,
+  ) {
+    if (!accessToken) {
+      return done(new UnauthorizedException(), false);
+    }
 
-  //   return done(null, {
-  //     accessToken,
-  //     profile,
-  //   });
-  // }
-  async validate(accessToken: string): Promise<any> {
-    const { data } = await axios.get(
-      'https://api.login.yahoo.com/openid/v1/userinfo',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
+    console.log('accessTokenaccessToken', accessToken);
+    console.log('profileprofile', profile);
 
-    return { email: data.email, name: data.name };
+    return done(null, {
+      accessToken,
+      profile,
+    });
   }
 }
