@@ -68,7 +68,7 @@ export class AppController {
     const email = req.user.profile?.emails?.[0]?.value;
     const token = req.user.accessToken;
     return res.redirect(
-      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
+      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=google`,
     );
   }
 
@@ -230,7 +230,7 @@ export class AppController {
 
       // ✅ Redirect to frontend with the token in the URL
       return res.redirect(
-        `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}`,
+        `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook`,
       );
     } catch (error) {
       console.error('Microsoft OAuth Error:', error);
