@@ -198,7 +198,7 @@ export class AppController {
   @Get('outlook/callback')
   async microsoftAuthRedirect(@Query('code') code: string) {
     if (!code) {
-      throw new UnauthorizedException('Authorization code not received');
+      throw new UnauthorizedException('Authorization code not receivedd');
     }
 
     console.log('Authorization Code:', code);
