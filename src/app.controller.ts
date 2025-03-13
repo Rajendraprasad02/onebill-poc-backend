@@ -194,7 +194,7 @@ export class AppController {
   //     );
   //   }
   // }
-
+  @Public()
   @Get('outlook/callback')
   async microsoftAuthRedirect(@Query('code') code: string) {
     if (!code) {
