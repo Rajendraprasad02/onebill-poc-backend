@@ -15,7 +15,7 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       clientSecret: configService.get('MICROSOFT_CLIENT_SECRET'),
       callbackURL:
         'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
-      scope: ['Mail.Read'],
+      scope: ['openid', 'profile', 'email', 'Mail.Read'],
       responseType: 'code',
       tenant: 'common',
     });
