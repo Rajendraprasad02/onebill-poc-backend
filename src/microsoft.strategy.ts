@@ -22,23 +22,23 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
     console.log('out the outlookk');
   }
 
-  async validate(accessToken, refreshToken, profile) {
-    console.log('AccessToken:', accessToken);
-    console.log('Profile:', profile);
+  // async validate(accessToken, refreshToken, profile) {
+  //   console.log('AccessToken:', accessToken);
+  //   console.log('Profile:', profile);
 
-    if (!accessToken) {
-      throw new UnauthorizedException(
-        'Access Token not received from Microsoft',
-      );
-    }
+  //   if (!accessToken) {
+  //     throw new UnauthorizedException(
+  //       'Access Token not received from Microsoft',
+  //     );
+  //   }
 
-    return {
-      accessToken,
-      profile: {
-        id: profile.id,
-        displayName: profile.displayName,
-        emails: profile.emails,
-      },
-    };
-  }
+  //   return {
+  //     accessToken,
+  //     profile: {
+  //       id: profile.id,
+  //       displayName: profile.displayName,
+  //       emails: profile.emails,
+  //     },
+  //   };
+  // }
 }
