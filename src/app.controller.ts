@@ -230,7 +230,8 @@ export class AppController {
       // Step 2: Use access token to fetch emails
       const mailsResponse = await axios.get(
         // 'https://graph.microsoft.com/v1.0/me/messages',
-        "https://graph.microsoft.com/v1.0/me/messages?$filter=messageType eq 'email'",
+        // "https://graph.microsoft.com/v1.0/me/messages?$filter=messageType eq 'email'",
+        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages',
 
         {
           headers: { Authorization: `Bearer ${access_token}` },
