@@ -16,6 +16,7 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       callbackURL:
         'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
       scope: ['openid', 'profile', 'email', 'Mail.Read'],
+      responseType: 'code',
       tenant: 'common',
     });
     console.log('out the outlookk');

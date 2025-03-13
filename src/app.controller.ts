@@ -19,6 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from 'modules/auth/auth.service';
 import { UserService } from 'modules/users/user/user.service';
 import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
@@ -28,6 +29,7 @@ export class AppController {
 
     private readonly appService: AppService,
     private readonly mailService: MailService,
+    private configService: ConfigService,
   ) {}
 
   @Get()
@@ -164,49 +166,81 @@ export class AppController {
   // @Get('outlook/callback')
   // @UseGuards(AuthGuard('outlook'))
   // async microsoftAuthRedirect(@Req() req) {
-  //   console.log('ress', req);
+  //   console.log('Request User:', req.user);
+
+  //   if (!req.user || !req.user.accessToken) {
+  //     throw new UnauthorizedException(
+  //       'No access token returned from Microsoft',
+  //     );
+  //   }
 
   //   const accessToken = req.user.accessToken;
-  //   const mails = await axios.get(
-  //     'https://graph.microsoft.com/v1.0/me/messages',
-  //     {
-  //       headers: { Authorization: `Bearer ${accessToken}` },
-  //     },
-  //   );
-  //   console.log('mails', mails);
+  //   console.log('Access Token:', accessToken);
 
-  //   return mails.data.value; // Return Outlook emails
+  //   try {
+  //     const mails = await axios.get(
+  //       'https://graph.microsoft.com/v1.0/me/messages',
+  //       {
+  //         headers: { Authorization: `Bearer ${accessToken}` },
+  //       },
+  //     );
+
+  //     console.log('Emails:', mails.data);
+  //     return mails.data.value;
+  //   } catch (error) {
+  //     console.error('Error fetching emails:', error);
+  //     throw new InternalServerErrorException(
+  //       'Failed to fetch emails from Outlook',
+  //     );
+  //   }
   // }
 
-  @Public()
   @Get('outlook/callback')
-  @UseGuards(AuthGuard('outlook'))
-  async microsoftAuthRedirect(@Req() req) {
-    console.log('Request User:', req.user);
-
-    if (!req.user || !req.user.accessToken) {
-      throw new UnauthorizedException(
-        'No access token returned from Microsoft',
-      );
+  async microsoftAuthRedirect(@Query('code') code: string) {
+    if (!code) {
+      throw new UnauthorizedException('Authorization code not received');
     }
 
-    const accessToken = req.user.accessToken;
-    console.log('Access Token:', accessToken);
+    console.log('Authorization Code:', code);
 
     try {
-      const mails = await axios.get(
-        'https://graph.microsoft.com/v1.0/me/messages',
+      // Step 1: Exchange the authorization code for an access token
+      const tokenResponse = await axios.post(
+        'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+        new URLSearchParams({
+          client_id: this.configService.get('MICROSOFT_CLIENT_ID'),
+          client_secret: this.configService.get('MICROSOFT_CLIENT_SECRET'),
+          code: code,
+          redirect_uri:
+            'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
+          grant_type: 'authorization_code',
+        }),
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         },
       );
 
-      console.log('Emails:', mails.data);
-      return mails.data.value;
+      const { access_token } = tokenResponse.data;
+      console.log('Access Token:', access_token);
+
+      if (!access_token) {
+        throw new UnauthorizedException('Access token not received');
+      }
+
+      // Step 2: Use access token to fetch emails
+      const mailsResponse = await axios.get(
+        'https://graph.microsoft.com/v1.0/me/messages',
+        {
+          headers: { Authorization: `Bearer ${access_token}` },
+        },
+      );
+
+      console.log('Emails:', mailsResponse.data);
+      return mailsResponse.data.value;
     } catch (error) {
-      console.error('Error fetching emails:', error);
+      console.error('Error fetching token/emails:', error);
       throw new InternalServerErrorException(
-        'Failed to fetch emails from Outlook',
+        'Failed to authenticate with Microsoft',
       );
     }
   }
