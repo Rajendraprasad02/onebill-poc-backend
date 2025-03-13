@@ -3,10 +3,12 @@ import {
   Body,
   Controller,
   Get,
+  InternalServerErrorException,
   Post,
   Query,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
@@ -158,21 +160,54 @@ export class AppController {
   @UseGuards(AuthGuard('outlook'))
   async microsoftAuth() {}
 
+  // @Public()
+  // @Get('outlook/callback')
+  // @UseGuards(AuthGuard('outlook'))
+  // async microsoftAuthRedirect(@Req() req) {
+  //   console.log('ress', req);
+
+  //   const accessToken = req.user.accessToken;
+  //   const mails = await axios.get(
+  //     'https://graph.microsoft.com/v1.0/me/messages',
+  //     {
+  //       headers: { Authorization: `Bearer ${accessToken}` },
+  //     },
+  //   );
+  //   console.log('mails', mails);
+
+  //   return mails.data.value; // Return Outlook emails
+  // }
+
   @Public()
   @Get('outlook/callback')
   @UseGuards(AuthGuard('outlook'))
   async microsoftAuthRedirect(@Req() req) {
-    console.log('ress', req);
+    console.log('Request User:', req.user);
+
+    if (!req.user || !req.user.accessToken) {
+      throw new UnauthorizedException(
+        'No access token returned from Microsoft',
+      );
+    }
 
     const accessToken = req.user.accessToken;
-    const mails = await axios.get(
-      'https://graph.microsoft.com/v1.0/me/messages',
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      },
-    );
-    console.log('mails', mails);
+    console.log('Access Token:', accessToken);
 
-    return mails.data.value; // Return Outlook emails
+    try {
+      const mails = await axios.get(
+        'https://graph.microsoft.com/v1.0/me/messages',
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+
+      console.log('Emails:', mails.data);
+      return mails.data.value;
+    } catch (error) {
+      console.error('Error fetching emails:', error);
+      throw new InternalServerErrorException(
+        'Failed to fetch emails from Outlook',
+      );
+    }
   }
 }

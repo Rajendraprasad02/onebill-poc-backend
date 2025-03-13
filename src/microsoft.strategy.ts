@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-microsoft';
 import { ConfigService } from '@nestjs/config';
@@ -22,9 +22,22 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
   }
 
   async validate(accessToken, refreshToken, profile) {
-    console.log('accessToken', accessToken);
-    console.log('profile', profile);
+    console.log('AccessToken:', accessToken);
+    console.log('Profile:', profile);
 
-    return { accessToken, profile };
+    if (!accessToken) {
+      throw new UnauthorizedException(
+        'Access Token not received from Microsoft',
+      );
+    }
+
+    return {
+      accessToken,
+      profile: {
+        id: profile.id,
+        displayName: profile.displayName,
+        emails: profile.emails,
+      },
+    };
   }
 }
