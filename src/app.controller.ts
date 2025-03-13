@@ -67,21 +67,9 @@ export class AppController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     const email = req.user.profile?.emails?.[0]?.value;
     const token = req.user.accessToken;
-
-    // const existingUser = await this.userService.findByEmail(email); // Check user in DB
-    // const existingUser = false; // Check user in DB
-
-    // if (existingUser) {
-    // User already exists → Redirect to invoice page
     return res.redirect(
       `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
     );
-    // } else {
-    //   // User does not exist → Redirect to set password page
-    //   return res.redirect(
-    //     `https://onebill-poc.vercel.app/set-password?email=${email}&token=${token}`,
-    //   );
-    // }
   }
 
   @Public()
@@ -164,44 +152,58 @@ export class AppController {
 
   // @Public()
   // @Get('outlook/callback')
-  // @UseGuards(AuthGuard('outlook'))
-  // async microsoftAuthRedirect(@Req() req) {
-  //   console.log('Request User:', req.user);
-
-  //   if (!req.user || !req.user.accessToken) {
-  //     throw new UnauthorizedException(
-  //       'No access token returned from Microsoft',
-  //     );
+  // async microsoftAuthRedirect(@Query('code') code: string) {
+  //   if (!code) {
+  //     throw new UnauthorizedException('Authorization code not receivedd');
   //   }
 
-  //   const accessToken = req.user.accessToken;
-  //   console.log('Access Token:', accessToken);
-
   //   try {
-  //     const mails = await axios.get(
-  //       'https://graph.microsoft.com/v1.0/me/messages',
+  //     // Step 1: Exchange the authorization code for an access token
+  //     const tokenResponse = await axios.post(
+  //       'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+  //       new URLSearchParams({
+  //         client_id: this.configService.get('MICROSOFT_CLIENT_ID'),
+  //         client_secret: this.configService.get('MICROSOFT_CLIENT_SECRET'),
+  //         code: code,
+  //         redirect_uri:
+  //           'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
+  //         grant_type: 'authorization_code',
+  //       }),
   //       {
-  //         headers: { Authorization: `Bearer ${accessToken}` },
+  //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   //       },
   //     );
 
-  //     console.log('Emails:', mails.data);
-  //     return mails.data.value;
+  //     const { access_token } = tokenResponse.data;
+
+  //     if (!access_token) {
+  //       throw new UnauthorizedException('Access token not received');
+  //     }
+
+  //     // Step 2: Use access token to fetch emails
+  //     const mailsResponse = await axios.get(
+  //       'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages',
+
+  //       {
+  //         headers: { Authorization: `Bearer ${access_token}` },
+  //       },
+  //     );
+
+  //     return mailsResponse.data.value;
+
   //   } catch (error) {
-  //     console.error('Error fetching emails:', error);
   //     throw new InternalServerErrorException(
-  //       'Failed to fetch emails from Outlook',
+  //       'Failed to authenticate with Microsoft',
   //     );
   //   }
   // }
+
   @Public()
   @Get('outlook/callback')
-  async microsoftAuthRedirect(@Query('code') code: string) {
+  async microsoftAuthRedirect(@Query('code') code: string, @Res() res) {
     if (!code) {
-      throw new UnauthorizedException('Authorization code not receivedd');
+      throw new UnauthorizedException('Authorization code not received');
     }
-
-    console.log('Authorization Code:', code);
 
     try {
       // Step 1: Exchange the authorization code for an access token
@@ -221,27 +223,17 @@ export class AppController {
       );
 
       const { access_token } = tokenResponse.data;
-      console.log('Access Token:', access_token);
 
       if (!access_token) {
         throw new UnauthorizedException('Access token not received');
       }
 
-      // Step 2: Use access token to fetch emails
-      const mailsResponse = await axios.get(
-        // 'https://graph.microsoft.com/v1.0/me/messages',
-        // "https://graph.microsoft.com/v1.0/me/messages?$filter=messageType eq 'email'",
-        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages',
-
-        {
-          headers: { Authorization: `Bearer ${access_token}` },
-        },
+      // ✅ Redirect to frontend with the token in the URL
+      return res.redirect(
+        `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}`,
       );
-
-      console.log('Emails:', mailsResponse.data);
-      return mailsResponse.data.value;
     } catch (error) {
-      console.error('Error fetching token/emails:', error);
+      console.error('Microsoft OAuth Error:', error);
       throw new InternalServerErrorException(
         'Failed to authenticate with Microsoft',
       );
