@@ -15,30 +15,30 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       clientSecret: configService.get('MICROSOFT_CLIENT_SECRET'),
       callbackURL:
         'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
-      scope: ['openid', 'profile', 'email', 'Mail.Read'],
+      scope: ['Mail.Read'],
       responseType: 'code',
       tenant: 'common',
     });
     console.log('out the outlookk');
   }
 
-  // async validate(accessToken, refreshToken, profile) {
-  //   console.log('AccessToken:', accessToken);
-  //   console.log('Profile:', profile);
+  async validate(accessToken, refreshToken, profile) {
+    console.log('AccessToken:', accessToken);
+    console.log('Profile:', profile);
 
-  //   if (!accessToken) {
-  //     throw new UnauthorizedException(
-  //       'Access Token not received from Microsoft',
-  //     );
-  //   }
+    if (!accessToken) {
+      throw new UnauthorizedException(
+        'Access Token not received from Microsoft',
+      );
+    }
 
-  //   return {
-  //     accessToken,
-  //     profile: {
-  //       id: profile.id,
-  //       displayName: profile.displayName,
-  //       emails: profile.emails,
-  //     },
-  //   };
-  // }
+    return {
+      accessToken,
+      profile: {
+        id: profile.id,
+        displayName: profile.displayName,
+        emails: profile.emails,
+      },
+    };
+  }
 }
