@@ -34,6 +34,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     }
 
     console.log('refreshToken', refreshToken);
+    console.log('profile', profile);
 
     return done(null, {
       accessToken,
