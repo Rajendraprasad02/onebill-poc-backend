@@ -17,10 +17,6 @@ export class AppService {
     return 'Hello World!';
   }
 
-  // sendMail({ email, content }: SendMailRequest) {
-  //   this.mailClient.emit('send_mail', new SendMailEvent(email, content));
-  // }
-
   async downloadAttachment(
     accessToken,
     messageId,

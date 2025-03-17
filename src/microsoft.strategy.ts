@@ -6,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
   constructor(private configService: ConfigService) {
-    console.log('in the outlook');
     super({
       authorizationURL:
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
@@ -19,13 +18,9 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       responseType: 'code',
       tenant: 'common',
     });
-    console.log('out the outlookk');
   }
 
   async validate(accessToken, refreshToken, profile) {
-    console.log('AccessToken:', accessToken);
-    console.log('Profile:', profile);
-
     if (!accessToken) {
       throw new UnauthorizedException(
         'Access Token not received from Microsoft',

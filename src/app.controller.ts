@@ -150,54 +150,6 @@ export class AppController {
   @UseGuards(AuthGuard('outlook'))
   async microsoftAuth() {}
 
-  // @Public()
-  // @Get('outlook/callback')
-  // async microsoftAuthRedirect(@Query('code') code: string) {
-  //   if (!code) {
-  //     throw new UnauthorizedException('Authorization code not receivedd');
-  //   }
-
-  //   try {
-  //     // Step 1: Exchange the authorization code for an access token
-  //     const tokenResponse = await axios.post(
-  //       'https://login.microsoftonline.com/common/oauth2/v2.0/token',
-  //       new URLSearchParams({
-  //         client_id: this.configService.get('MICROSOFT_CLIENT_ID'),
-  //         client_secret: this.configService.get('MICROSOFT_CLIENT_SECRET'),
-  //         code: code,
-  //         redirect_uri:
-  //           'https://onebill-poc-backend-production.up.railway.app/api/outlook/callback',
-  //         grant_type: 'authorization_code',
-  //       }),
-  //       {
-  //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  //       },
-  //     );
-
-  //     const { access_token } = tokenResponse.data;
-
-  //     if (!access_token) {
-  //       throw new UnauthorizedException('Access token not received');
-  //     }
-
-  //     // Step 2: Use access token to fetch emails
-  //     const mailsResponse = await axios.get(
-  //       'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages',
-
-  //       {
-  //         headers: { Authorization: `Bearer ${access_token}` },
-  //       },
-  //     );
-
-  //     return mailsResponse.data.value;
-
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(
-  //       'Failed to authenticate with Microsoft',
-  //     );
-  //   }
-  // }
-
   @Public()
   @Get('outlook/callback')
   async microsoftAuthRedirect(@Query('code') code: string, @Res() res) {
