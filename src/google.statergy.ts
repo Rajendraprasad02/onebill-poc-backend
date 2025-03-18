@@ -22,6 +22,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       ],
       accessType: 'offline', // Required to get a refresh token
       prompt: 'consent', // Ensures refresh token is returned
+      includeGrantedScopes: true, // Add this
+
       session: false, // Debugging step
     });
   }

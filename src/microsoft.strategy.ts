@@ -24,17 +24,10 @@ export class MicrosoftStrategy extends PassportStrategy(Strategy, 'outlook') {
       ],
       responseType: 'code',
       tenant: 'common',
-      prompt: 'consent', // Forces Microsoft to ask for permissions every time
     });
   }
 
   async validate(accessToken, refreshToken, profile) {
-    console.log('🔑 Access Token:', accessToken);
-    console.log(
-      '🔄 Refresh Token:',
-      refreshToken || '⚠ NO REFRESH TOKEN RECEIVED',
-    );
-    console.log('👤 Profile:', JSON.stringify(profile, null, 2));
     if (!accessToken) {
       throw new UnauthorizedException(
         'Access Token not received from Microsoft',
