@@ -67,6 +67,9 @@ export class AppController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     const email = req.user.profile?.emails?.[0]?.value;
     const token = req.user.accessToken;
+    const refreshToken = req;
+    console.log('redddsss', req);
+
     return res.redirect(
       `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=google`,
     );

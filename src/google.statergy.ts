@@ -22,6 +22,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       ],
       accessType: 'offline', // Required to get a refresh token
       prompt: 'consent', // Ensures refresh token is returned
+      session: false, // Debugging step
     });
   }
 
@@ -35,12 +36,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       return done(new UnauthorizedException(), false);
     }
 
-    console.log('refreshToken', refreshToken);
-    console.log('profile', profile);
+    console.log('accessToken:', accessToken);
+    console.log('refreshToken:', refreshToken);
+    console.log('profile:', JSON.stringify(profile, null, 2));
 
     return done(null, {
       accessToken,
       profile,
+      refreshToken,
     });
   }
 }
