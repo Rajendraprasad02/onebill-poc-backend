@@ -11,7 +11,13 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const loggingService = app.get(LoggingService);
-  app.enableCors();
+
+  app.enableCors({
+    origin: '*', // Allow frontend domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,
+  });
 
   app.useGlobalFilters(new HttpExceptionFilter());
   // Global validation pipe
