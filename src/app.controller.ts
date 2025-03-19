@@ -113,6 +113,8 @@ export class AppController {
         password,
       });
 
+      console.log('newwwwww', newUser);
+
       // Step 2: Redirect to invoice page
       return res.status(201).json({
         user: newUser,
