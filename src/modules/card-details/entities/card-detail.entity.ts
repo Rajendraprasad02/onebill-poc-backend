@@ -12,8 +12,8 @@ export class CardDetails {
   @Column({ type: 'varchar', length: 16, unique: true })
   cardNumber: string;
 
-  @Column({ type: 'int' })
-  expiryYear: number;
+  @Column({ type: 'varchar', length: 7 }) // Stores as 'MM/YY' or 'YYYY-MM'
+  expiryDate: string;
 
   @Column({ type: 'varchar', length: 4 })
   cvc: string;
