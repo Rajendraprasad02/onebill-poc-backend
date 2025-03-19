@@ -82,6 +82,8 @@ export class AppController {
 
     // Redirect based on user existence
     const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=${isNewUser}`;
+
+    return res.redirect(redirectUrl);
   }
 
   @Public()
