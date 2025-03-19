@@ -1,3 +1,4 @@
+import { CardDetails } from 'modules/card-details/entities/card-detail.entity';
 import { Invoice } from 'modules/gmail/entities/gmail.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
@@ -29,4 +30,7 @@ export class User {
 
   @Column({ nullable: true })
   googleId: string; // Store Google ID to identify Google users
+
+  @OneToMany(() => CardDetails, (card) => card.user, { cascade: true })
+  cards: CardDetails[];
 }
