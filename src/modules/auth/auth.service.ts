@@ -252,6 +252,7 @@ export class AuthService {
       throw new UnauthorizedException(MESSAGES.INVALID_TOKEN);
     }
   }
+
   async createUser(createUserDto: CreateUserDto) {
     try {
       const { hash: hashedPassword, salt } = this.cryptoService.hashPassword(

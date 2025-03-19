@@ -69,10 +69,19 @@ export class AppController {
     const token = req.user.accessToken;
     const refreshToken = req;
 
-    return res.redirect(
-      // `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=google`,
-      `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google`,
-    );
+    // return res.redirect(
+    //   `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}&provider=google`,
+    //   `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google`,
+    // );
+
+    const user = await this.userService.findByEmail(email);
+
+    console.log('user', user);
+
+    const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
+
+    // Redirect based on user existence
+    const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=${isNewUser}`;
   }
 
   @Public()
