@@ -13,9 +13,6 @@ export class CardDetails {
   cardNumber: string;
 
   @Column({ type: 'int' })
-  expiryMonth: number;
-
-  @Column({ type: 'int' })
   expiryYear: number;
 
   @Column({ type: 'varchar', length: 4 })
