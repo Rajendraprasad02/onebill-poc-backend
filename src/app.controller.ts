@@ -116,7 +116,7 @@ export class AppController {
       // Step 2: Redirect to invoice page
       return res.status(201).json({
         message: 'User created successfully',
-        redirectUrl: `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
+        redirectUrl: `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=false`,
       });
     } catch (error) {
       console.error('Error setting password:', error);
