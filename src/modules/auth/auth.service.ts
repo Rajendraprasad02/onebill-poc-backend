@@ -97,7 +97,7 @@ export class AuthService {
       // Directly access the created user's properties
       // const signInRes = await this.signIn(newUser.username, newUser.pass);
 
-      return;
+      return createdUser;
     } catch (err) {
       throw err;
     }
