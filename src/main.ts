@@ -13,7 +13,9 @@ async function bootstrap() {
   const loggingService = app.get(LoggingService);
 
   app.enableCors({
-    origin: '*', // Allow frontend domain
+    // origin: '*', // Allow frontend domain
+    origin: ['https://onebill-poc.vercel.app'], // Allow your frontend
+
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
