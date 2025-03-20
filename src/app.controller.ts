@@ -229,7 +229,7 @@ export class AppController {
       const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
 
       // const redirectUrl = `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook&isNewUser=${isNewUser}`;
-      const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${access_token}&provider=outlook&isNewUser=${isNewUser}&userId=${user?.id}`;
+      const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${access_token}&provider=outlook&isNewUser=${isNewUser}&userid=${user?.id}`;
 
       return res.redirect(redirectUrl);
     } catch (error) {
