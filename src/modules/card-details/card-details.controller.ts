@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CardDetailsService } from './card-details.service';
 import { Public } from 'common/decorators/public.decorator';
@@ -15,8 +16,8 @@ export class CardDetailsController {
   constructor(private readonly cardService: CardDetailsService) {}
 
   @Public()
-  @Post(':userId')
-  async addCards(@Param('userId') userId: number, @Body() cards: any[]) {
+  @Post()
+  async addCards(@Query('userId') userId: number, @Body() cards: any[]) {
     return this.cardService.addCards(userId, cards);
   }
   @Public()

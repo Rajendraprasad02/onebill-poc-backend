@@ -14,8 +14,7 @@ async function bootstrap() {
 
   app.enableCors({
     // origin: '*', // Allow frontend domain
-    origin: ['https://onebill-poc.vercel.app'], // Allow your frontend
-
+    origin: '*', // Allow your frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
