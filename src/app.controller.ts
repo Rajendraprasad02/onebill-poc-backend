@@ -215,14 +215,20 @@ export class AppController {
         },
       );
 
+      console.log('userResponse', userResponse);
+
       const email =
         userResponse.data.mail || userResponse.data.userPrincipalName;
+
+      console.log('emailemail', email);
 
       if (!email) {
         throw new UnauthorizedException('Email not received from Microsoft');
       }
 
       const user = await this.userService.findByEmail(email);
+
+      console.log('useruser', user);
 
       const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
 
