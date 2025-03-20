@@ -78,8 +78,6 @@ export class AppController {
 
     const user = await this.userService.findByEmail(email);
 
-    console.log('useruseruseruser', user);
-
     const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
 
     // Redirect based on user existence

@@ -16,8 +16,8 @@ export class CardDetailsController {
   constructor(private readonly cardService: CardDetailsService) {}
 
   @Public()
-  @Post()
-  async addCards(@Query('userId') userId: number, @Body() cards: any[]) {
+  @Post(':userId')
+  async addCards(@Param('userId') userId: number, @Body() cards: any[]) {
     return this.cardService.addCards(userId, cards);
   }
   @Public()
