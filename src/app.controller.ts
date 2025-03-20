@@ -215,12 +215,8 @@ export class AppController {
         },
       );
 
-      console.log('userResponse', userResponse);
-
       const email =
         userResponse.data.mail || userResponse.data.userPrincipalName;
-
-      console.log('emailemail', email);
 
       if (!email) {
         throw new UnauthorizedException('Email not received from Microsoft');
@@ -228,11 +224,10 @@ export class AppController {
 
       const user = await this.userService.findByEmail(email);
 
-      console.log('useruser', user);
-
       const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
 
-      const redirectUrl = `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook&isNewUser=${isNewUser}`;
+      // const redirectUrl = `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook&isNewUser=${isNewUser}`;
+      const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${access_token}&provider=google&isNewUser=${isNewUser}`;
 
       return res.redirect(redirectUrl);
     } catch (error) {
