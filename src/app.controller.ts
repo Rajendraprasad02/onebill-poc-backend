@@ -20,6 +20,7 @@ import { AuthService } from 'modules/auth/auth.service';
 import { UserService } from 'modules/users/user/user.service';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
+import { CardDetailsService } from 'modules/card-details/card-details.service';
 
 @Controller()
 export class AppController {
@@ -29,6 +30,7 @@ export class AppController {
 
     private readonly appService: AppService,
     private readonly mailService: MailService,
+    private readonly cardService: CardDetailsService,
     private configService: ConfigService,
   ) {}
 
@@ -97,7 +99,7 @@ export class AppController {
   @Post('google/set-password')
   async setGooglePassword(@Body() body, @Req() req, @Res() res) {
     try {
-      const { email, password } = body;
+      const { email, password, cards } = body; // Accept `cards` in the request body
       const token = req.headers.authorization?.split(' ')[1]; // Extract token from "Bearer <token>"
 
       if (!token) {
@@ -113,7 +115,14 @@ export class AppController {
         password,
       });
 
-      console.log('newwwwww', newUser);
+      if (!newUser) {
+        return res.status(500).json({ message: 'User creation failed' });
+      }
+
+      // Step 2: Add cards for the new user (if any)
+      if (cards && cards.length > 0) {
+        await this.cardService.addCards(newUser.id, cards);
+      }
 
       // Step 2: Redirect to invoice page
       return res.status(201).json({
