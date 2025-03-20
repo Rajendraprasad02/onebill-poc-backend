@@ -10,5 +10,6 @@ import { User } from 'modules/users/user/user.entity';
 
   controllers: [CardDetailsController],
   providers: [CardDetailsService],
+  exports: [CardDetailsService], // ✅ Make sure to export the service
 })
 export class CardDetailsModule {}
