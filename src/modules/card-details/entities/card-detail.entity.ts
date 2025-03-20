@@ -18,6 +18,9 @@ export class CardDetails {
   @Column({ type: 'varchar', length: 4 })
   cvc: string;
 
+  @Column({ type: 'boolean', nullable: true })
+  isDefault: boolean;
+
   @ManyToOne(() => User, (user) => user.cards, { onDelete: 'CASCADE' })
   user: User;
 }
