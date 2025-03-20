@@ -78,12 +78,12 @@ export class AppController {
 
     const user = await this.userService.findByEmail(email);
 
-    console.log('user', user);
+    console.log('useruseruseruser', user);
 
     const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
 
     // Redirect based on user existence
-    const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=${isNewUser}&userId=${user?.id}`;
+    const redirectUrl = `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=${isNewUser}&userid=${user?.id}`;
 
     return res.redirect(redirectUrl);
   }
@@ -99,7 +99,7 @@ export class AppController {
   @Post('google/set-password')
   async setGooglePassword(@Body() body, @Req() req, @Res() res) {
     try {
-      const { email, password, cards } = body; // Accept `cards` in the request body
+      const { email, password, cards, provider } = body; // Accept `cards` in the request body
       const token = req.headers.authorization?.split(' ')[1]; // Extract token from "Bearer <token>"
 
       if (!token) {
@@ -128,7 +128,7 @@ export class AppController {
       return res.status(201).json({
         user: newUser,
         message: 'User created successfully',
-        redirectUrl: `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=google&isNewUser=false`,
+        redirectUrl: `https://onebill-poc.vercel.app/#/auth-redirect?token=${token}&provider=${provider}&isNewUser=false&userid=${newUser.id}`,
       });
     } catch (error) {
       console.error('Error setting password:', error);
