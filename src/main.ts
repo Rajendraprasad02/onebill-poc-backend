@@ -16,8 +16,8 @@ async function bootstrap() {
     // origin: '*', // Allow frontend domain
     origin: ['https://onebill-poc.vercel.app'], // Allow your frontend
 
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type,Authorization',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
