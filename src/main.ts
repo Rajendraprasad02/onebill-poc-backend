@@ -19,6 +19,22 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
+  app.use((req, res, next) => {
+    if (req.method === 'OPTIONS') {
+      res.header(
+        'Access-Control-Allow-Origin',
+        'https://onebill-poc.vercel.app',
+      );
+      res.header(
+        'Access-Control-Allow-Methods',
+        'GET, POST, PUT, DELETE, OPTIONS',
+      );
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      return res.status(200).json({});
+    }
+    next();
+  });
   app.useGlobalFilters(new HttpExceptionFilter());
   // Global validation pipe
   app.useGlobalPipes(
