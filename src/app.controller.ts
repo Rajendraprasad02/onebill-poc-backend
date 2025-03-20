@@ -115,6 +115,8 @@ export class AppController {
         password,
       });
 
+      console.log('useruseruseruser', newUser);
+
       if (!newUser) {
         return res.status(500).json({ message: 'User creation failed' });
       }
