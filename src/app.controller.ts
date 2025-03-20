@@ -206,10 +206,29 @@ export class AppController {
         throw new UnauthorizedException('Access token not received');
       }
 
-      // ✅ Redirect to frontend with the token in the URL
-      return res.redirect(
-        `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook`,
+      const userResponse = await axios.get(
+        'https://graph.microsoft.com/v1.0/me',
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
       );
+
+      const email =
+        userResponse.data.mail || userResponse.data.userPrincipalName;
+
+      if (!email) {
+        throw new UnauthorizedException('Email not received from Microsoft');
+      }
+
+      const user = await this.userService.findByEmail(email);
+
+      const isNewUser = user ? 'false' : 'true'; // Convert to string for URL params
+
+      const redirectUrl = `https://onebill-poc.vercel.app/#/invoice-emails?token=${access_token}&provider=outlook&isNewUser=${isNewUser}`;
+
+      return res.redirect(redirectUrl);
     } catch (error) {
       console.error('Microsoft OAuth Error:', error);
       throw new InternalServerErrorException(
