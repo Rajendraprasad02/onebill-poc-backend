@@ -17,7 +17,6 @@ async function bootstrap() {
     origin: '*', // Allow your frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
   });
 
   app.useGlobalFilters(new HttpExceptionFilter());
