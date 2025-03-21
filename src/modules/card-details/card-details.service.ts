@@ -45,6 +45,14 @@ export class CardDetailsService {
       throw new Error('Card not found or does not belong to the user');
     }
 
+    if (updateData.isDefault) {
+      // Update all cards of the user to set isDefault to false
+      await this.cardRepository.update(
+        { user: { id: userId } }, // Find all cards belonging to the user
+        { isDefault: false }, // Set all to false
+      );
+    }
+
     Object.assign(card, updateData);
     return this.cardRepository.save(card);
   }
