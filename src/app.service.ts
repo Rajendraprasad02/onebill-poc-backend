@@ -78,6 +78,111 @@ export class AppService {
     }
   }
 
+  //with attachments
+  // async getInvoiceEmails(accessToken: string) {
+  //   try {
+  //     // Step 1: Fetch all emails containing "invoice"
+  //     const { data } = await axios.get(
+  //       'https://www.googleapis.com/gmail/v1/users/me/messages?q=invoice',
+  //       { headers: { Authorization: `Bearer ${accessToken}` } },
+  //     );
+
+  //     if (!data.messages) return { message: 'No invoices found.' };
+
+  //     // Step 2: Get details of each email
+  //     const emails = await Promise.all(
+  //       data.messages.map(async (msg) => {
+  //         const response = await axios.get(
+  //           `https://www.googleapis.com/gmail/v1/users/me/messages/${msg.id}`,
+  //           { headers: { Authorization: `Bearer ${accessToken}` } },
+  //         );
+
+  //         const emailData = response.data;
+  //         const payload = emailData.payload;
+
+  //         // Extract subject
+  //         const subjectHeader = payload.headers.find(
+  //           (header) => header.name === 'Subject',
+  //         );
+  //         const subject = subjectHeader ? subjectHeader.value : '(No Subject)';
+
+  //         // Extract sender (From)
+  //         const fromHeader = payload.headers.find(
+  //           (header) => header.name === 'From',
+  //         );
+  //         const from = fromHeader ? fromHeader.value : 'Unknown Sender';
+
+  //         // Extract message body
+  //         let messageBody = '';
+
+  //         if (payload.parts) {
+  //           // Extract text or HTML
+
+  //           const textPart = payload.parts.find(
+  //             (part) => part.mimeType === 'text/plain',
+  //           );
+  //           const htmlPart = payload.parts.find(
+  //             (part) => part.mimeType === 'text/html',
+  //           );
+  //           const attachmentPart = payload.parts.find(
+  //             (part) => part.mimeType === 'multipart/alternative',
+  //           );
+
+  //           messageBody =
+  //             textPart?.body?.data ||
+  //             htmlPart?.body?.data ||
+  //             attachmentPart?.body?.data ||
+  //             '';
+  //         } else {
+  //           messageBody = payload.body?.data || '';
+  //         }
+
+  //         // Decode Base64 email body
+  //         if (messageBody) {
+  //           messageBody = Buffer.from(messageBody, 'base64').toString('utf-8');
+  //         }
+
+  //         // Extract attachments and download them
+  //         const attachments = [];
+
+  //         if (payload.parts) {
+  //           for (const part of payload.parts) {
+  //             if (part.filename && part.body?.attachmentId) {
+  //               const attachment = {
+  //                 filename: part.filename,
+  //                 attachmentId: part.body.attachmentId,
+  //                 mimeType: part.mimeType,
+  //               };
+
+  //               // Call downloadAttachment() here
+  //               const filePath = await this.downloadAttachment(
+  //                 accessToken,
+  //                 msg.id, // messageId
+  //                 attachment.attachmentId,
+  //                 attachment.filename,
+  //                 attachment.mimeType, // Pass mimeType correctly
+  //               );
+
+  //               if (filePath) {
+  //                 attachment['filePath'] = filePath; // Store downloaded file path
+  //               }
+
+  //               attachments.push(attachment);
+  //             }
+  //           }
+  //         }
+
+  //         return { subject, from, messageBody, attachments };
+  //       }),
+  //     );
+
+  //     return emails;
+  //   } catch (error) {
+  //     console.error('Error fetching emails:', error);
+  //     return { error: 'Failed to fetch emails' };
+  //   }
+  // }
+
   async getInvoiceEmails(accessToken: string) {
     try {
       // Step 1: Fetch all emails containing "invoice"
@@ -116,22 +221,14 @@ export class AppService {
 
           if (payload.parts) {
             // Extract text or HTML
-
             const textPart = payload.parts.find(
               (part) => part.mimeType === 'text/plain',
             );
             const htmlPart = payload.parts.find(
               (part) => part.mimeType === 'text/html',
             );
-            const attachmentPart = payload.parts.find(
-              (part) => part.mimeType === 'multipart/alternative',
-            );
 
-            messageBody =
-              textPart?.body?.data ||
-              htmlPart?.body?.data ||
-              attachmentPart?.body?.data ||
-              '';
+            messageBody = textPart?.body?.data || htmlPart?.body?.data || '';
           } else {
             messageBody = payload.body?.data || '';
           }
@@ -141,37 +238,7 @@ export class AppService {
             messageBody = Buffer.from(messageBody, 'base64').toString('utf-8');
           }
 
-          // Extract attachments and download them
-          const attachments = [];
-
-          if (payload.parts) {
-            for (const part of payload.parts) {
-              if (part.filename && part.body?.attachmentId) {
-                const attachment = {
-                  filename: part.filename,
-                  attachmentId: part.body.attachmentId,
-                  mimeType: part.mimeType,
-                };
-
-                // Call downloadAttachment() here
-                const filePath = await this.downloadAttachment(
-                  accessToken,
-                  msg.id, // messageId
-                  attachment.attachmentId,
-                  attachment.filename,
-                  attachment.mimeType, // Pass mimeType correctly
-                );
-
-                if (filePath) {
-                  attachment['filePath'] = filePath; // Store downloaded file path
-                }
-
-                attachments.push(attachment);
-              }
-            }
-          }
-
-          return { subject, from, messageBody, attachments };
+          return { subject, from, messageBody };
         }),
       );
 
