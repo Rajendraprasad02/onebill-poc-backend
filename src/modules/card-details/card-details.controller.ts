@@ -12,6 +12,7 @@ import {
 import { CardDetailsService } from './card-details.service';
 import { Public } from 'common/decorators/public.decorator';
 import { CardDetails } from './entities/card-detail.entity';
+import { ApiBody, ApiOperation } from '@nestjs/swagger';
 
 @Controller('cards')
 export class CardDetailsController {
@@ -35,6 +36,11 @@ export class CardDetailsController {
 
   @Public()
   @Put(':userId/:cardId')
+  @ApiOperation({ summary: 'Update Card Details' })
+  @ApiBody({
+    description: 'Card details to be updated',
+    type: CardDetails, // Specify the CardDetails DTO or Entity class
+  })
   async updateCard(
     @Param('userId') userId: number,
     @Param('cardId') cardId: number,
