@@ -30,4 +30,22 @@ export class CardDetailsService {
   async deleteCard(cardId: number) {
     return this.cardRepository.delete(cardId);
   }
+
+  async updateCard(
+    userId: number,
+    cardId: number,
+    updateData: Partial<CardDetails>,
+  ) {
+    const card = await this.cardRepository.findOne({
+      where: { id: cardId, user: { id: userId } },
+      relations: ['user'],
+    });
+
+    if (!card) {
+      throw new Error('Card not found or does not belong to the user');
+    }
+
+    Object.assign(card, updateData);
+    return this.cardRepository.save(card);
+  }
 }
