@@ -104,7 +104,7 @@ export class BillDetailsService {
       id,
     );
 
-    await this.billDetailRepository.update(id, updateBillDetailDto);
+    await this.billDetailRepository.save({ id, ...updateBillDetailDto });
     return this.findOne(id);
   }
 
