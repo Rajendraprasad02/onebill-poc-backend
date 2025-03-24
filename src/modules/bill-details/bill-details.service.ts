@@ -32,7 +32,12 @@ export class BillDetailsService {
         });
 
         if (!existingBill) {
-          uniqueBills.push(dto);
+          const user = await this.userRepository.findOne({
+            where: { id: dto.userId },
+          });
+          if (!user) throw new Error(`User with id ${dto.userId} not found`);
+
+          uniqueBills.push({ ...dto, user }); // Assign the User entity
         }
       }
 
