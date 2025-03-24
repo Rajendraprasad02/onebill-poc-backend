@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateBillDetailDto } from './dto/create-bill-detail.dto';
@@ -51,7 +52,7 @@ export class BillDetailController {
     return this.billDetailService.findOne(id);
   }
   @Public()
-  @Patch('update/:id')
+  @Put('update/:id')
   @ApiOperation({ summary: 'Update a bill' })
   @ApiResponse({
     status: 200,
