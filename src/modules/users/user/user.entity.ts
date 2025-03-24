@@ -1,3 +1,4 @@
+import { BillDetail } from 'modules/bill-details/entities/bill-detail.entity';
 import { CardDetails } from 'modules/card-details/entities/card-detail.entity';
 import { Invoice } from 'modules/gmail/entities/gmail.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
@@ -33,4 +34,7 @@ export class User {
 
   @OneToMany(() => CardDetails, (card) => card.user, { cascade: true })
   cards: CardDetails[];
+
+  @OneToMany(() => BillDetail, (card) => card.user, { cascade: true })
+  billDetail: BillDetail[];
 }

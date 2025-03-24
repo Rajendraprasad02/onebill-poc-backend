@@ -27,6 +27,10 @@ export class CardDetailsService {
     return this.cardRepository.find({ where: { user: { id: userId } } });
   }
 
+  async getCardById(id: number) {
+    return this.cardRepository.findOne({ where: { id } });
+  }
+
   async deleteCard(cardId: number) {
     return this.cardRepository.delete(cardId);
   }

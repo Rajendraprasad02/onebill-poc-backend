@@ -137,33 +137,6 @@ export class AppController {
   }
 
   @Public()
-  @Get('yahoo')
-  @UseGuards(AuthGuard('yahoo'))
-  async yahooAuth() {
-    // Redirects to Yahoo login page
-  }
-
-  @Public()
-  @Get('yahoo/callback')
-  @UseGuards(AuthGuard('yahoo'))
-  async yahooAuthRedirect(@Req() req, @Res() res) {
-    const email = req.user.profile?.emails?.[0]?.value;
-
-    const token = req.user.accessToken;
-
-    return res.redirect(
-      `https://onebill-poc.vercel.app/#/invoice-emails?token=${token}`,
-    );
-  }
-
-  @Public()
-  @Get('yahoo/emails')
-  async getYahooEmails(@Req() req) {
-    const token = req.query.token;
-    return this.appService.getYahooInvoiceEmails(token);
-  }
-
-  @Public()
   @Post('ak')
   async getMail(@Body() body) {
     const { userEmail, accessToken } = body;

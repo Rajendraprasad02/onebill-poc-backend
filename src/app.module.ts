@@ -28,6 +28,7 @@ import { GmailModule } from './modules/gmail/gmail.module';
 import { YahooStrategy } from 'yahoo.strategy';
 import { MicrosoftStrategy } from 'microsoft.strategy';
 import { CardDetailsModule } from './modules/card-details/card-details.module';
+import { BillDetailsModule } from './modules/bill-details/bill-details.module';
 
 const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NODE_ENV is not set
 // const configPath = path.resolve(__dirname, '../src/config/config.json'); // Path to your config file
@@ -75,6 +76,7 @@ const environment = process.env.NODE_ENV || 'local'; // Default to 'local' if NO
     SharedModule,
     GmailModule,
     CardDetailsModule,
+    BillDetailsModule,
   ],
   controllers: [AppController],
   providers: [

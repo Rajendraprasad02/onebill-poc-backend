@@ -29,6 +29,11 @@ export class CardDetailsController {
     return this.cardService.getUserCards(userId);
   }
   @Public()
+  @Get(':id')
+  async getCardById(@Param('id') id: number) {
+    return this.cardService.getCardById(id);
+  }
+  @Public()
   @Delete(':cardId')
   async deleteCard(@Param('cardId') cardId: number) {
     return this.cardService.deleteCard(cardId);
