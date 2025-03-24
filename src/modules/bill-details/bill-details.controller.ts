@@ -77,7 +77,6 @@ export class BillDetailController {
   @ApiResponse({ status: 200, description: 'Bills found', type: [BillDetail] })
   findAllByUserId(@Param('userId') userId: number) {
     const userIdNumber = Number(userId); // Convert userId to a number
-    console.log('Converted userId:', userIdNumber);
 
     return this.billDetailService.findAllByUserId(userIdNumber);
   }

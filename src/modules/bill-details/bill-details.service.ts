@@ -4,23 +4,59 @@ import { UpdateBillDetailDto } from './dto/update-bill-detail.dto';
 import { BillDetail } from './entities/bill-detail.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'modules/users/user/user.entity';
 
 @Injectable()
 export class BillDetailsService {
   constructor(
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async create(
     createBillDetailDto: CreateBillDetailDto | CreateBillDetailDto[],
   ): Promise<BillDetail | BillDetail[]> {
     if (Array.isArray(createBillDetailDto)) {
-      const bills = this.billDetailRepository.create(createBillDetailDto);
-      return await this.billDetailRepository.save(bills);
+      const uniqueBills = [];
+
+      for (const dto of createBillDetailDto) {
+        const existingBill = await this.billDetailRepository.findOne({
+          where: {
+            user: { id: dto.userId }, // Reference user relation properly
+            service: dto.service,
+            dueDate: dto.dueDate,
+            amount: dto.amount,
+          },
+        });
+
+        if (!existingBill) {
+          uniqueBills.push(dto);
+        }
+      }
+
+      if (uniqueBills.length > 0) {
+        return await this.billDetailRepository.save(uniqueBills);
+      }
+
+      return [];
     }
-    const bill = this.billDetailRepository.create(createBillDetailDto);
-    return await this.billDetailRepository.save(bill);
+
+    const existingBill = await this.billDetailRepository.findOne({
+      where: {
+        user: { id: createBillDetailDto.userId }, // Correct way for relations
+        service: createBillDetailDto.service,
+        dueDate: createBillDetailDto.dueDate,
+        amount: createBillDetailDto.amount,
+      },
+    });
+
+    if (existingBill) {
+      return existingBill; // Avoid duplicate insertion
+    }
+
+    return await this.billDetailRepository.save(createBillDetailDto);
   }
 
   async findAll(): Promise<BillDetail[]> {
@@ -28,8 +64,6 @@ export class BillDetailsService {
   }
 
   async findAllByUserId(userId: number): Promise<BillDetail[]> {
-    console.log('Querying bills for userId:', userId);
-
     return await this.billDetailRepository.find({
       where: {
         user: { id: userId },
