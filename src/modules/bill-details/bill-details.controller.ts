@@ -51,7 +51,7 @@ export class BillDetailController {
     return this.billDetailService.findOne(id);
   }
   @Public()
-  @Patch(':id')
+  @Patch('update/:id')
   @ApiOperation({ summary: 'Update a bill' })
   @ApiResponse({
     status: 200,
