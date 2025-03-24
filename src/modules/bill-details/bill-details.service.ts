@@ -27,6 +27,17 @@ export class BillDetailsService {
     return await this.billDetailRepository.find();
   }
 
+  async findAllByUserId(userId: number): Promise<BillDetail[]> {
+    console.log('Querying bills for userId:', userId);
+
+    return await this.billDetailRepository.find({
+      where: {
+        user: { id: userId },
+        isPaid: false, // Only unpaid bills
+      },
+    });
+  }
+
   async findOne(id: number): Promise<BillDetail> {
     const bill = await this.billDetailRepository.findOne({ where: { id } });
     if (!bill) {

@@ -71,4 +71,14 @@ export class BillDetailController {
   remove(@Param('id') id: number): Promise<void> {
     return this.billDetailService.remove(id);
   }
+  @Public()
+  @Get(':userId')
+  @ApiOperation({ summary: 'Get bills by user ID where isPaid is false' })
+  @ApiResponse({ status: 200, description: 'Bills found', type: [BillDetail] })
+  findAllByUserId(@Param('userId') userId: string): Promise<BillDetail[]> {
+    const userIdNumber = Number(userId); // Convert userId to a number
+    console.log('Converted userId:', userIdNumber);
+
+    return this.billDetailService.findAllByUserId(userIdNumber);
+  }
 }
