@@ -97,6 +97,13 @@ export class BillDetailsService {
     id: number,
     updateBillDetailDto: UpdateBillDetailDto,
   ): Promise<BillDetail> {
+    console.log(
+      'updateBillDetailDtoupdateBillDetailDto',
+      updateBillDetailDto,
+      'ddddddd',
+      id,
+    );
+
     await this.billDetailRepository.update(id, updateBillDetailDto);
     return this.findOne(id);
   }

@@ -62,6 +62,13 @@ export class BillDetailController {
     @Param('id') id: number,
     @Body() updateBillDetailDto: UpdateBillDetailDto,
   ): Promise<BillDetail> {
+    console.log(
+      'updateBillDetailDtoupdateBillDetailDto',
+      updateBillDetailDto,
+      'iddddd',
+      id,
+    );
+
     return this.billDetailService.update(id, updateBillDetailDto);
   }
   @Public()
