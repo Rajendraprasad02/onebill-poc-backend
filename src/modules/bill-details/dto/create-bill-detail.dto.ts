@@ -12,6 +12,12 @@ export class CreateBillDetailDto {
   dueDate: string;
 
   @ApiProperty({
+    example: 1,
+    description: 'User ID',
+  })
+  userId: number; // Accept userId in the request body
+
+  @ApiProperty({
     example: false,
     description: 'Payment status of the bill',
     default: false,
