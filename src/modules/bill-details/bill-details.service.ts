@@ -55,8 +55,16 @@ export class BillDetailsService {
     if (existingBill) {
       return existingBill; // Avoid duplicate insertion
     }
+    const user = await this.userRepository.findOne({
+      where: { id: createBillDetailDto.userId },
+    });
+    if (!user)
+      throw new Error(`User with id ${createBillDetailDto.userId} not found`);
 
-    return await this.billDetailRepository.save(createBillDetailDto);
+    return await this.billDetailRepository.save({
+      ...createBillDetailDto,
+      user,
+    });
   }
 
   async findAll(): Promise<BillDetail[]> {
