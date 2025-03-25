@@ -204,6 +204,8 @@ export class AppService {
           const emailData = response.data;
           const payload = emailData.payload;
 
+          console.log('payloadpayload', payload);
+
           // Extract subject
           const subjectHeader = payload.headers.find(
             (header) => header.name === 'Subject',
