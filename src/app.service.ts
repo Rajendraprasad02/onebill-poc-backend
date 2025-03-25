@@ -240,7 +240,7 @@ export class AppService {
             messageBody = Buffer.from(messageBody, 'base64').toString('utf-8');
           }
 
-          return { subject, from, messageBody };
+          return { subject, from, messageBody, payload };
         }),
       );
 
