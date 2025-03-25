@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBillDetailDto } from './dto/create-bill-detail.dto';
 import { UpdateBillDetailDto } from './dto/update-bill-detail.dto';
 import { BillDetail } from './entities/bill-detail.entity';
@@ -8,6 +12,8 @@ import { User } from 'modules/users/user/user.entity';
 
 @Injectable()
 export class BillDetailsService {
+  private paymentCounter = 0;
+
   constructor(
     @InjectRepository(BillDetail)
     private readonly billDetailRepository: Repository<BillDetail>,
@@ -96,6 +102,20 @@ export class BillDetailsService {
     id: number,
     updateBillDetailDto: UpdateBillDetailDto,
   ): Promise<BillDetail> {
+    this.paymentCounter++;
+
+    if (this.paymentCounter % 3 === 0) {
+      const errorMessages = [
+        'Payment failed due to insufficient balance.',
+        'Payment gateway error. Please try again later.',
+        'Bank declined the transaction. Contact your bank.',
+        'Transaction limit exceeded. Try a smaller amount.',
+      ];
+      const randomError =
+        errorMessages[Math.floor(Math.random() * errorMessages.length)];
+      throw new BadRequestException(randomError);
+    }
+
     await this.billDetailRepository.save({ id, ...updateBillDetailDto });
     return this.findOne(id);
   }
