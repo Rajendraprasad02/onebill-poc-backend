@@ -8,7 +8,8 @@ import { MailService } from 'common/modules/services/mail.service';
 @Controller('users')
 @ApiTags('Users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
+  @Public()
   @Get()
   async findAll(): Promise<User[]> {
     const users = await this.userService.findAll();

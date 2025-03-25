@@ -80,7 +80,6 @@ export class BillDetailsService {
     return await this.billDetailRepository.find({
       where: {
         user: { id: userId },
-        isPaid: false, // Only unpaid bills
       },
     });
   }
@@ -97,13 +96,6 @@ export class BillDetailsService {
     id: number,
     updateBillDetailDto: UpdateBillDetailDto,
   ): Promise<BillDetail> {
-    console.log(
-      'updateBillDetailDtoupdateBillDetailDto',
-      updateBillDetailDto,
-      'ddddddd',
-      id,
-    );
-
     await this.billDetailRepository.save({ id, ...updateBillDetailDto });
     return this.findOne(id);
   }
